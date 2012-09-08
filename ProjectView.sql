@@ -126,35 +126,44 @@ case PI.OBJECTID2
 end                                        as "Object Value 2",
 PI.OBJECTVALUE3                            as "Object Value 3",
 PI.OBJECTVALUE4                            as "Object Value 4",
-Decode(PI.SOURCESTATUS, 0, 'Unknown',
-                        1, 'Absent',
-                        2, 'Changed',
-                        3, 'Unchanged',
-                        4, '*Changed',
-                        5, '*Unchanged',
-                        6, 'Same',
-                        PI.SOURCESTATUS)   as "Source",
-Decode(PI.TARGETSTATUS, 0, 'Unknown',
-                        1, 'Absent',
-                        2, 'Changed',
-                        3, 'Unchanged',
-                        4, '*Changed',
-                        5, '*Unchanged',
-                        6, 'Same',
-                        PI.TARGETSTATUS)   as "Target",
-Decode(PI.UPGRADEACTION, 0, 'Copy',
-                         1, 'Delete',
-                         2, 'None',
-                         3, 'CopyProp',
-                         PI.UPGRADEACTION) as "Action",
-Decode(PI.TAKEACTION, 0, 'No',
-                      1, 'Yes',
-                      PI.TAKEACTION)       as "Take Action"
+case PI.SOURCESTATUS
+  when 0 then 'Unknown'
+  when 1 then 'Absent'
+  when 2 then 'Changed'
+  when 3 then 'Unchanged'
+  when 4 then '*Changed'
+  when 5 then '*Unchanged'
+  when 6 then 'Same'
+  else to_char(PI.SOURCESTATUS)
+end                                        as "Source",
+case PI.TARGETSTATUS
+  when 0 then 'Unknown'
+  when 1 then 'Absent'
+  when 2 then 'Changed'
+  when 3 then 'Unchanged'
+  when 4 then '*Changed'
+  when 5 then '*Unchanged'
+  when 6 then 'Same'
+  else to_char(PI.TARGETSTATUS)
+end                                        as "Target",
+case PI.UPGRADEACTION
+  when 0 then 'Copy'
+  when 1 then 'Delete'
+  when 2 then 'None'
+  when 3 then 'CopyProp'
+  else to_char(PI.UPGRADEACTION)
+end                                        as "Action",
+case PI.TAKEACTION
+  when 0 then 'No'
+  when 1 then 'Yes'
+  else to_char(PI.TAKEACTION)
+end                                        as "Take Action"
 from   PSPROJECTITEM PI
 where  PI.PROJECTNAME in ( 'DLP_COMPARE' )
 -- AND  (PI.SOURCESTATUS IN (4,5) or PI.TARGETSTATUS IN (4,5))
-order  by PI.OBJECTTYPE,
+order by  PI.OBJECTTYPE,
           PI.OBJECTVALUE1,
           PI.OBJECTVALUE2,
           PI.OBJECTVALUE3,
           PI.OBJECTVALUE4; 
+
